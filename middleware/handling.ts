@@ -50,5 +50,15 @@ export const handler = async (question: any, mac: string, ip: string) => {
 		}
 	}
 
+	if (question.name == "wifi.ceccun.com") {
+		return {
+			name: question.name,
+			type: 1,
+			class: 1,
+			ttl: 1,
+			address: mainIp,
+		};
+	}
+
 	return null;
 };

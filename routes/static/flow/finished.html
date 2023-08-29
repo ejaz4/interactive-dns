@@ -4,20 +4,24 @@
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>You're connected</title>
+		<link rel="stylesheet" href="/css/global.css" />
+		<link rel="stylesheet" href="/css/flow/finished.css" />
 	</head>
 	<body>
+		<img
+			src="https://ceccun.com/images/logo-15.svg"
+			alt=""
+			class="ceccunLogo"
+		/>
 		<div class="app">
+			<img src="/assets/success.svg" alt="" class="successicon" />
 			<h1 id="username">You're connected</h1>
-			<p>You can now access the internet.</p>
-			<br />
-			<p>
-				See this page a lot? Turn off Mac Address randomisation in your
-				device settings.
-			</p>
+			<p>You can now access internet services.</p>
 		</div>
 
 		<script src="/js/global.js"></script>
 		<script>
+			const devID = getCookie("devID");
 			(async () => {
 				const userFetch = await fetch("/api/user", {
 					headers: {

@@ -4,8 +4,15 @@
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Checking your device...</title>
+		<link rel="stylesheet" href="/css/flow/global.css" />
+		<link rel="stylesheet" href="/css/flow/check.css" />
 	</head>
 	<body>
+		<img
+			src="https://ceccun.com/images/logo-15.svg"
+			alt=""
+			class="ceccunLogo"
+		/>
 		<div class="app">Checking credentials...</div>
 		<script src="/js/global.js"></script>
 		<script>
@@ -13,31 +20,78 @@
 				const devid = getCookie("devID");
 
 				if (devid != "") {
-					const deviceAuthedFetch = await fetch(
-						"/api/devices/renew",
+					const deviceInfoFetch = await fetch("/api/device", {
+						headers: {
+							devid,
+						},
+					});
+
+					var deviceInfoFetchJson;
+					try {
+						deviceInfoFetchJson = await deviceInfoFetch.json();
+					} catch (e) {
+						setCookie("devID", "", -1);
+						window.location.reload();
+					}
+
+					if (deviceInfoFetchJson.approved == false) {
+						return (window.location.href = "approval.html");
+					}
+
+					const pendingApprovalFetch = await fetch(
+						"/api/devices/pendingApproval",
 						{
 							headers: {
 								devid,
 							},
-							method: "POST",
 						},
 					);
 
-					if (deviceAuthedFetch.status != 200) {
-						window.location.href = "signin.html";
+					const pendingApprovalFetchJson =
+						await pendingApprovalFetch.json();
+
+					if (pendingApprovalFetchJson.data == true) {
+						window.location.href = "pending.html";
 						return;
+					} else {
+						const deviceAuthedFetch = await fetch(
+							"/api/devices/renew",
+							{
+								headers: {
+									devid,
+								},
+								method: "POST",
+							},
+						);
+
+						if (deviceAuthedFetch.status != 200) {
+							window.location.href = "privacy.html";
+							return;
+						}
+
+						const deviceAuthedFetchJson =
+							await deviceAuthedFetch.json();
+
+						if (deviceAuthedFetchJson.action == "devicerenewed") {
+							window.location.href = "finished.html";
+							return;
+						}
 					}
+				} else {
+					const attemptCookieFetch =
+						await fetch("/api/device/cookie");
 
-					const deviceAuthedFetchJson =
-						await deviceAuthedFetch.json();
+					const attemptCookieFetchJson =
+						await attemptCookieFetch.json();
 
-					if (deviceAuthedFetchJson.action == "devicerenewed") {
-						window.location.href = "finished.html";
+					if (attemptCookieFetchJson.success == true) {
+						setCookie("devID", attemptCookieFetchJson.data, 360);
+						window.location.reload();
 						return;
 					}
 				}
 
-				window.location.href = "signin.html";
+				window.location.href = "privacy.html";
 			})();
 		</script>
 	</body>

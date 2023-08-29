@@ -71,7 +71,11 @@ export const dnsProxy = async (
 		if (modified == 0) {
 			request.on("end", cb);
 			statistics.incrementQueries();
-			request.send();
+			try {
+				request.send();
+			} catch (e) {
+				console.error("This error is being investigated.");
+			}
 		}
 	};
 

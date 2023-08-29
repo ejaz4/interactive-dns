@@ -13,10 +13,10 @@ export const applyRoutes = () => {
 	userGetRoutes();
 
 	ws.get("/", async (req, res) => {
-		res.redirect(301, "/flow/check.html");
+		res.redirect(301, "http://wifi.ceccun.com/flow/check.html");
 	});
 
 	ws.get("/*", async (req, res) => {
-		res.redirect(301, "/flow/check.html");
+		res.redirect(301, "http://wifi.ceccun.com/flow/check.html");
 	});
 };

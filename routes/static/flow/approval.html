@@ -4,10 +4,20 @@
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Waiting on Approval</title>
+		<link rel="stylesheet" href="/css/global.css" />
+		<link rel="stylesheet" href="/css/flow/approval.css" />
 	</head>
 	<body>
+		<img
+			src="https://ceccun.com/images/logo-15.svg"
+			alt=""
+			class="ceccunLogo"
+		/>
 		<div class="app">
 			<h1 id="username"></h1>
+			<video loop autoplay muted>
+				<source src="/assets/approve-first.webm" type="video/webm" />
+			</video>
 			<p>
 				On your other already connected devices, visit wifi.ceccun.com
 				and approve this new device to gain access to the internet.
@@ -55,13 +65,14 @@
 
 				const checkFetchJson = await checkFetch.json();
 
-				if (userFetch.status != 200) {
+				if (checkFetch.status != 200) {
 					alert(
 						"Something went wrong and you were routed incorrectly...",
 					);
 					window.location.href = "check.html";
 				}
 
+				console.log(checkFetchJson.approved == true);
 				if (checkFetchJson.approved == true) {
 					window.location.href = "finished.html";
 				}

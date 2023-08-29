@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Pending approval</title>
+		<link rel="stylesheet" href="/css/global.css" />
+		<link rel="stylesheet" href="/css/flow/privacy.css" />
+	</head>
+	<body>
+		<img
+			src="https://ceccun.com/images/logo-15.svg"
+			alt=""
+			class="ceccunLogo"
+		/>
+		<div class="app">
+			<h1>Authorise new device</h1>
+			<p>
+				A new device is attempting to login with your credentials to
+				access Ceccun Wi-Fi.
+			</p>
+			<p>Confirm whether to authorise this device as your own.</p>
+
+			<button id="authorisebtn">Authorise</button>
+			<button id="denybtn">Deny</button>
+		</div>
+
+		<script src="/js/global.js"></script>
+		<script>
+			const devID = getCookie("devID");
+
+			if (devID == "") {
+				window.location.href = "signin.html";
+			}
+
+			document
+				.getElementById("authorisebtn")
+				.addEventListener("click", async () => {
+					console.log("Approving");
+					const approveFetch = await fetch("/api/device/approve", {
+						headers: {
+							devid: devID,
+						},
+					});
+
+					const approveFetchJson = await approveFetch.json();
+
+					if (approveFetchJson.success == true) {
+						alert(
+							"You approved any unauthorised devices. You can now access the internet through these devices under your account.",
+						);
+					} else {
+						alert(
+							"Something went wrong and you were routed incorrectly...",
+						);
+						window.location.href = "check.html";
+					}
+				});
+		</script>
+	</body>
+</html>

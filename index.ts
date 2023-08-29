@@ -15,10 +15,6 @@ export const ws = fastify({
 
 applyRoutes();
 
-setInterval(() => {
-	console.log(statistics.getQueries());
-}, 10000);
-
 server.on("request", handleRequest);
 
 server.on("listening", () =>
