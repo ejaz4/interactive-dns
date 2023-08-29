@@ -30,34 +30,34 @@ export const dnsProxy = async (
 
 		var modified = 0;
 		// custom handlers here
-		if (question.name == "wifi.ceccun.com") {
-			modified = 1;
-			response.answer.push({
-				name: question.name,
-				type: 1,
-				class: 1,
-				ttl: 1,
-				address: mainIp,
-			});
-			cb();
-		}
+		// if (question.name == "wifi.ceccun.com") {
+		// 	modified = 1;
+		// 	response.answer.push({
+		// 		name: question.name,
+		// 		type: 1,
+		// 		class: 1,
+		// 		ttl: 1,
+		// 		address: mainIp,
+		// 	});
+		// 	cb();
+		// }
 
-		if (
-			question.name.endsWith("ceccun.com") == false &&
-			question.name != "cdn.jsdelivr.net"
-		) {
-			// if (!fs.existsSync(`../py/devices/${mac.split(":").join("-")}`)) {
-			modified = 1;
-			response.answer.push({
-				name: question.name,
-				type: 1,
-				class: 1,
-				ttl: 1,
-				address: mainIp,
-			});
-			cb();
-			// }
-		}
+		// if (
+		// 	question.name.endsWith("ceccun.com") == false &&
+		// 	question.name != "cdn.jsdelivr.net"
+		// ) {
+		// 	// if (!fs.existsSync(`../py/devices/${mac.split(":").join("-")}`)) {
+		// 	modified = 1;
+		// 	response.answer.push({
+		// 		name: question.name,
+		// 		type: 1,
+		// 		class: 1,
+		// 		ttl: 1,
+		// 		address: mainIp,
+		// 	});
+		// 	cb();
+		// 	// }
+		// }
 		if (modified == 0) {
 			request.on("end", cb);
 			statistics.incrementQueries();

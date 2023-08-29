@@ -9,15 +9,3 @@ datasource db {
   provider = "sqlite"
   url      = env("DATABASE_URL")
 }
-
-model Account {
-  id String @default(uuid()) @unique
-  name String
-  devices Device[]
-}
-
-model Device {
-  id String @default(uuid()) @unique
-  owner Account @relation(fields: [ownerId], references: [id])
-  ownerId String
-}

@@ -2,7 +2,7 @@ import { server } from "./server";
 import { handleRequest } from "./middleware";
 import { Statistics } from "./statistics";
 
-export const mainIp = "192.168.0.110";
+export const mainIp = "192.168.0.115";
 export const authority = { address: "1.1.1.1", port: 53, type: "udp" };
 
 export const statistics = new Statistics();
