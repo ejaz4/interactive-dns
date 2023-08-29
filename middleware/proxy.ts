@@ -1,5 +1,6 @@
 import { authority } from "..";
 import { mainIp } from "..";
+import { handler } from "./handling";
 import { statistics } from "..";
 
 const arp = require("node-arp");
@@ -14,7 +15,7 @@ export const dnsProxy = async (
 	console.log("proxying", question.name);
 	console.log(question);
 
-	const makeResponse = (mac: string) => {
+	const makeResponse = async (mac: string) => {
 		var request = dns.Request({
 			question: question, // forwarding the question
 			server: authority, // this is the DNS server we are asking
@@ -58,6 +59,15 @@ export const dnsProxy = async (
 		// 	cb();
 		// 	// }
 		// }
+
+		const handlerResponse = await handler(question, mac, ip);
+
+		if (handlerResponse != null) {
+			modified = 1;
+			response.answer.push(handlerResponse);
+			cb();
+		}
+
 		if (modified == 0) {
 			request.on("end", cb);
 			statistics.incrementQueries();

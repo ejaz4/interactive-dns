@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Sign in - Ceccun Wi-Fi</title>
+	</head>
+	<body>
+		<div class="app">
+			<h1>Sign In</h1>
+			<p>
+				Enter your name and a desired username. If you have an account,
+				you can use the same username to add this new device to your
+				account.
+			</p>
+
+			<input type="text" id="name" placeholder="Name" />
+			<br />
+			<input type="text" id="username" placeholder="Username" />
+			<br />
+			<button id="submitbtn">Submit</button>
+
+			<script src="/js/global.js"></script>
+			<script>
+				document
+					.getElementById("submitbtn")
+					.addEventListener("click", () => {
+						const name = document.getElementById("name").value;
+						const username =
+							document.getElementById("username").value;
+
+						document
+							.getElementById("submitbtn")
+							.setAttribute("disabled", "disabled");
+
+						(async () => {
+							const fetchCreate = await fetch("/api/users/new", {
+								method: "POST",
+								body: JSON.stringify({
+									name,
+									username,
+								}),
+							});
+
+							const fetchCreateJson = await fetchCreate.json();
+
+							if (fetchCreate.status != 200) {
+								alert(
+									"The service is having trouble, try again later. ERROR " +
+										fetchCreateJson.error,
+								);
+								return;
+							}
+
+							if (fetchCreateJson.action == "usercreated") {
+								const devID = fetchCreateJson.data.id;
+
+								createCookie("devID", devID, 360);
+
+								window.location.href = "finished.html";
+							}
+
+							if (fetchCreateJson.action == "approvalrequired") {
+								const devID = fetchCreateJson.data.id;
+
+								createCookie("devID", devID, 360);
+
+								window.location.href = "approval.html";
+							}
+						})();
+					});
+			</script>
+		</div>
+	</body>
+</html>

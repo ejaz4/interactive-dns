@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Waiting on Approval</title>
+	</head>
+	<body>
+		<div class="app">
+			<h1 id="username"></h1>
+			<p>
+				On your other already connected devices, visit wifi.ceccun.com
+				and approve this new device to gain access to the internet.
+			</p>
+		</div>
+
+		<script src="/js/global.js"></script>
+		<script>
+			const devID = getCookie("devID");
+
+			if (devID == "") {
+				alert(
+					"Something went wrong and you were routed incorrectly...",
+				);
+				window.location.href = "check.html";
+			}
+
+			(async () => {
+				const userFetch = await fetch("/api/user", {
+					headers: {
+						devid: devID,
+					},
+				});
+
+				const userFetchJson = await userFetch.json();
+
+				if (userFetch.status != 200) {
+					alert(
+						"Something went wrong and you were routed incorrectly...",
+					);
+					window.location.href = "check.html";
+				}
+
+				document.getElementById(
+					"username",
+				).innerText = `Just one last thing, ${userFetchJson.data.name}...`;
+			})();
+		</script>
+	</body>
+</html>

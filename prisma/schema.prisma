@@ -9,3 +9,21 @@ datasource db {
   provider = "sqlite"
   url      = env("DATABASE_URL")
 }
+
+model Account {
+  id String @default(uuid()) @unique
+  name String
+  username String @unique
+  firstVisited DateTime @default(now())
+  devices Device[]
+  terminatedStatus Boolean @default(false)
+}
+
+model Device {
+  id String @default(uuid()) @unique
+  macAddress String @unique
+  owner Account @relation(fields: [ownerId], references: [id])
+  firstSeen DateTime @default(now())
+  approved Boolean @default(false)
+  ownerId String
+}
