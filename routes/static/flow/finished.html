@@ -7,7 +7,7 @@
 	</head>
 	<body>
 		<div class="app">
-			<h1>You're connected</h1>
+			<h1 id="username">You're connected</h1>
 			<p>You can now access the internet.</p>
 			<br />
 			<p>
@@ -15,5 +15,29 @@
 				device settings.
 			</p>
 		</div>
+
+		<script src="/js/global.js"></script>
+		<script>
+			(async () => {
+				const userFetch = await fetch("/api/user", {
+					headers: {
+						devid: devID,
+					},
+				});
+
+				const userFetchJson = await userFetch.json();
+
+				if (userFetch.status != 200) {
+					alert(
+						"Something went wrong and you were routed incorrectly...",
+					);
+					window.location.href = "check.html";
+				}
+
+				document.getElementById(
+					"username",
+				).innerText = `You're connected, ${userFetchJson.name}`;
+			})();
+		</script>
 	</body>
 </html>

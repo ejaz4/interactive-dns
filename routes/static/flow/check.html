@@ -7,9 +7,38 @@
 	</head>
 	<body>
 		<div class="app">Checking credentials...</div>
-
+		<script src="/js/global.js"></script>
 		<script>
-			window.location.href = "signin.html";
+			(async () => {
+				const devid = getCookie("devID");
+
+				if (devid != "") {
+					const deviceAuthedFetch = await fetch(
+						"/api/devices/renew",
+						{
+							headers: {
+								devid,
+							},
+							method: "POST",
+						},
+					);
+
+					if (deviceAuthedFetch.status != 200) {
+						window.location.href = "signin.html";
+						return;
+					}
+
+					const deviceAuthedFetchJson =
+						await deviceAuthedFetch.json();
+
+					if (deviceAuthedFetchJson.action == "devicerenewed") {
+						window.location.href = "finished.html";
+						return;
+					}
+				}
+
+				window.location.href = "signin.html";
+			})();
 		</script>
 	</body>
 </html>

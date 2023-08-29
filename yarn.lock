@@ -62,6 +62,11 @@
   resolved "https://registry.yarnpkg.com/@lukeed/ms/-/ms-2.0.1.tgz#3c2bbc258affd9cc0e0cc7828477383c73afa6ee"
   integrity sha512-Xs/4RZltsAL7pkvaNStUQt7netTkyxrS0K+RILcVr3TRMS/ToOg4I6uNfhB9SlGsnWBym4U+EaXq0f0cEMNkHA==
 
+"@network-utils/arp-lookup@^2.0.2":
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/@network-utils/arp-lookup/-/arp-lookup-2.0.2.tgz#1eca11554e85a947c9ec43798b69d1e1f94f540d"
+  integrity sha512-f2CGBBT4LXnqh92sS5HXMjEz4krfewi/P8dNaM36qOJIfcTipeEIrohtG6MbhrYfW6La/noW3J9dg7M3p4veyQ==
+
 "@prisma/client@^5.2.0":
   version "5.2.0"
   resolved "https://registry.yarnpkg.com/@prisma/client/-/client-5.2.0.tgz#cbfdd440614b38736563a7999f39922fcde0ed50"

@@ -1,6 +1,8 @@
 import { FastifyRequest } from "fastify";
 import { ws } from "..";
 import { prisma } from "../libs/prisma";
+import { DeviceGet } from "./user";
+import arp from "@network-utils/arp-lookup";
 
 type NewUserRequest = FastifyRequest<{
 	Body: {
@@ -10,11 +12,51 @@ type NewUserRequest = FastifyRequest<{
 }>;
 
 export const registerRoutes = () => {
+	ws.post("/api/devices/renew", async (req: DeviceGet, res) => {
+		const deviceIP = req.ip;
+		const deviceMac = await arp.toMAC(deviceIP);
+
+		if (!deviceMac) {
+			return res.status(500).send({
+				success: false,
+				error: "deviceidentityerror",
+			});
+		}
+
+		try {
+			const device = await prisma.device.update({
+				where: {
+					id: req.headers.devid,
+				},
+				data: {
+					macAddress: deviceMac,
+				},
+			});
+
+			if (device) {
+				res.send({
+					success: true,
+					action: "devicerenewed",
+				});
+			} else {
+				res.status(500).send({
+					success: false,
+					error: "deviceidentityerror",
+				});
+			}
+		} catch (e) {
+			console.log(e);
+			res.status(500).send({
+				success: false,
+				error: "deviceidentityerror",
+			});
+		}
+	});
+
 	ws.post("/api/users/new", async (req: NewUserRequest, res) => {
 		const arp = require("node-arp");
 		const deviceIP = req.ip;
 		let deviceMac = "00:00:00:00:00:00";
-		console.log(deviceIP);
 
 		const afterMac = async () => {
 			if (deviceMac === "00:00:00:00:00:00") {
@@ -24,7 +66,6 @@ export const registerRoutes = () => {
 				});
 			}
 
-			console.log(deviceMac);
 			try {
 				const user = await prisma.account.create({
 					data: {
@@ -86,11 +127,11 @@ export const registerRoutes = () => {
 			}
 		};
 
-		await arp.getMAC(deviceIP, (err: any, mac: string) => {
+		await arp.getMAC(deviceIP, async (err: any, mac: string) => {
 			if (!err) {
-				console.log(mac);
+				console.log(res.sent);
 				deviceMac = mac;
-				afterMac();
+				await afterMac();
 			} else {
 				res.status(500).send({
 					success: false,

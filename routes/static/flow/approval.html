@@ -43,8 +43,35 @@
 
 				document.getElementById(
 					"username",
-				).innerText = `Just one last thing, ${userFetchJson.data.name}...`;
+				).innerText = `Just one last thing, ${userFetchJson.name}...`;
 			})();
+
+			const check = async () => {
+				const checkFetch = await fetch("/api/device", {
+					headers: {
+						devid: devID,
+					},
+				});
+
+				const checkFetchJson = await checkFetch.json();
+
+				if (userFetch.status != 200) {
+					alert(
+						"Something went wrong and you were routed incorrectly...",
+					);
+					window.location.href = "check.html";
+				}
+
+				if (checkFetchJson.approved == true) {
+					window.location.href = "finished.html";
+				}
+			};
+
+			setInterval(() => {
+				try {
+					check();
+				} catch (e) {}
+			}, 1000);
 		</script>
 	</body>
 </html>

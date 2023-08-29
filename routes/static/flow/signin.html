@@ -40,6 +40,15 @@
 									name,
 									username,
 								}),
+								headers: {
+									"Content-Type": "application/json",
+								},
+							}).catch((err) => {
+								alert(
+									"The service is having trouble, try again later. ERROR " +
+										err,
+								);
+								return;
 							});
 
 							const fetchCreateJson = await fetchCreate.json();
@@ -52,10 +61,17 @@
 								return;
 							}
 
+							document
+								.getElementById("submitbtn")
+								.removeAttribute("disabled");
+
+							document.getElementById("submitbtn").innerText =
+								fetchCreateJson.action;
+
 							if (fetchCreateJson.action == "usercreated") {
 								const devID = fetchCreateJson.data.id;
 
-								createCookie("devID", devID, 360);
+								setCookie("devID", devID, 360);
 
 								window.location.href = "finished.html";
 							}
@@ -63,7 +79,7 @@
 							if (fetchCreateJson.action == "approvalrequired") {
 								const devID = fetchCreateJson.data.id;
 
-								createCookie("devID", devID, 360);
+								setCookie("devID", devID, 360);
 
 								window.location.href = "approval.html";
 							}

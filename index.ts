@@ -9,7 +9,9 @@ export const authority = { address: "1.1.1.1", port: 53, type: "udp" };
 
 export const statistics = new Statistics();
 
-export const ws = fastify();
+export const ws = fastify({
+	forceCloseConnections: false,
+});
 
 applyRoutes();
 

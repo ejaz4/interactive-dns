@@ -1,10 +1,11 @@
 {
 	"name": "ceccun-dns",
 	"scripts": {
-		"dev": "tsc && cp -r ./routes/static ./dist/routes/static && node dist/"
+		"dev": "tsc && cp -rf ./routes/static/. ./dist/routes/static && node dist/"
 	},
 	"dependencies": {
 		"@fastify/static": "^6.10.2",
+		"@network-utils/arp-lookup": "^2.0.2",
 		"@prisma/client": "^5.2.0",
 		"async": "^3.2.0",
 		"body-parser": "^1.19.0",
