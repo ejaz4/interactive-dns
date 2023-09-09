@@ -4,8 +4,8 @@ import { Statistics } from "./statistics";
 import fastify from "fastify";
 import { applyRoutes } from "./routes";
 
-export const mainIp = "192.168.0.115";
-export const authority = { address: "1.1.1.1", port: 53, type: "udp" };
+export const mainIp = "192.168.0.109";
+export const authority = { address: "8.8.8.8", port: 53, type: "udp" };
 
 export const statistics = new Statistics();
 

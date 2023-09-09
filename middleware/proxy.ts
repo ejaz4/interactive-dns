@@ -2,6 +2,7 @@ import { authority } from "..";
 import { mainIp } from "..";
 import { handler } from "./handling";
 import { statistics } from "..";
+import fs from "fs";
 
 const arp = require("node-arp");
 const dns = require("native-node-dns");
@@ -13,7 +14,6 @@ export const dnsProxy = async (
 	ip: string,
 ) => {
 	console.log("proxying", question.name);
-	console.log(question);
 
 	const makeResponse = async (mac: string) => {
 		var request = dns.Request({
@@ -71,17 +71,21 @@ export const dnsProxy = async (
 		if (modified == 0) {
 			request.on("end", cb);
 			statistics.incrementQueries();
-			try {
-				request.send();
-			} catch (e) {
-				console.error("This error is being investigated.");
-			}
+			console.log(question);
+
+			request.send();
 		}
 	};
 
-	arp.getMAC(ip, function (err: any, mac: string) {
-		if (!err) {
-			makeResponse(mac);
-		}
-	});
+	if (
+		question.name.match(
+			/^(?:(?!-)(?:[-\w]){0,62}[a-zA-Z0-9]\.)*(?!-)(?:[-\w]){1,62}[a-zA-Z0-9]$/,
+		)
+	) {
+		arp.getMAC(ip, function (err: any, mac: string) {
+			if (!err) {
+				makeResponse(mac);
+			}
+		});
+	}
 };
